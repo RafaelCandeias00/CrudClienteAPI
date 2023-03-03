@@ -1,4 +1,6 @@
 using ClienteAPI.Context;
+using ClienteAPI.Interfaces;
+using ClienteAPI.Respositorys;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +31,8 @@ namespace ClienteAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<ICliente, ClienteRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

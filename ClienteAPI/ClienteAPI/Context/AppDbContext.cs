@@ -7,6 +7,6 @@ namespace ClienteAPI.Context
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
     }
 }
