@@ -18,12 +18,12 @@ namespace ClienteAPI.Respositorys
 
         public async Task<IEnumerable<Cliente>> GetAll()
         {
-            return await _context.Clientes.ToListAsync();
+            return await _context.Clientes.AsNoTracking().ToListAsync();
         }
 
         public async Task<Cliente> GetById(int id)
         {
-            return await _context.Clientes.FindAsync(id);
+            return await _context.Clientes.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task Post(Cliente cliente)

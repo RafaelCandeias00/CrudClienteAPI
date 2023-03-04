@@ -43,7 +43,7 @@ namespace ClienteAPI.Controllers
         }
 
         // GET api/Clientes/0
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int:min(1)}")]
         public async Task<ActionResult<Cliente>> GetById([FromRoute] int id)
         {
             try
@@ -52,7 +52,7 @@ namespace ClienteAPI.Controllers
 
                 if (cliente == null)
                 {
-                    return NotFound("Cliente não encontrado!");
+                    return NotFound($"Id: {id} | Cliente não encontrado!");
                 }
 
                 return Ok(cliente);
@@ -64,7 +64,7 @@ namespace ClienteAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Cliente cliente)
+        public async Task<ActionResult> Post([FromBody] Cliente cliente)
         {
             try
             {
@@ -77,8 +77,8 @@ namespace ClienteAPI.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put([FromBody] Cliente cliente, int id)
+        [HttpPut("{id:int:min(1)}")]
+        public async Task<ActionResult> Put([FromBody] Cliente cliente, [FromRoute] int id)
         {
             try
             {
@@ -98,8 +98,8 @@ namespace ClienteAPI.Controllers
             }
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
+        [HttpDelete("{id:int:min(1)}")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
         {
             try
             {
