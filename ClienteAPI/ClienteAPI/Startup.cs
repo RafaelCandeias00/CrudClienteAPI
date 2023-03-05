@@ -1,4 +1,5 @@
 using ClienteAPI.Context;
+using ClienteAPI.Extensions;
 using ClienteAPI.Interfaces;
 using ClienteAPI.Respositorys;
 using Microsoft.AspNetCore.Builder;
@@ -55,6 +56,8 @@ namespace ClienteAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ClienteAPI v1"));
             }
+
+            app.ConfigureExceptionHandler();
 
             app.UseHttpsRedirection();
 
