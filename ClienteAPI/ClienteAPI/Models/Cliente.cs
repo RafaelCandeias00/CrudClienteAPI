@@ -11,6 +11,7 @@ namespace ClienteAPI.Models
 
         [Required(ErrorMessage = "CPF é obrigatório!")]
         [ValidaCpf(ErrorMessage = "CPF Inválido!")]
+        [StringLength(11, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 14)]
         public string Cpf { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -18,11 +19,11 @@ namespace ClienteAPI.Models
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataNascimento { get; set; }
 
-        [Required(ErrorMessage = "")]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(9, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 8)]
         public string Sexo { get; set; }
 

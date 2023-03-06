@@ -1,4 +1,6 @@
+using AutoMapper;
 using ClienteAPI.Context;
+using ClienteAPI.DTOs.Mappings;
 using ClienteAPI.Extensions;
 using ClienteAPI.Interfaces;
 using ClienteAPI.Respositorys;
@@ -31,9 +33,17 @@ namespace ClienteAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<ICliente, ClienteRepository>();
+            services.AddScoped<IClienteRepository, ClienteRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -57,6 +67,7 @@ namespace ClienteAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ClienteAPI v1"));
             }
 
+            // tratamento de erros
             app.ConfigureExceptionHandler();
 
             app.UseHttpsRedirection();

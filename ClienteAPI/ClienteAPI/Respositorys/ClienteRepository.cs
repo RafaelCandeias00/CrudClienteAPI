@@ -8,40 +8,22 @@ using System.Threading.Tasks;
 
 namespace ClienteAPI.Respositorys
 {
-    public class ClienteRepository : ICliente
+    public class ClienteRepository : Repository<Cliente>, IClienteRepository
     {
         private readonly AppDbContext _context;
-        public ClienteRepository(AppDbContext context)
+        public ClienteRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<Cliente>> GetAll()
+        public async Task<Cliente> GetByCPF(string cpf)
         {
-            return await _context.Clientes.AsNoTracking().ToListAsync();
+            return await _context.Clientes.FirstOrDefaultAsync(c => c.Cpf == cpf);
         }
 
-        public async Task<Cliente> GetById(int id)
+        public async Task<IEnumerable<Cliente>> GetByNome(string nome)
         {
-            return await _context.Clientes.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
-        }
-
-        public async Task Post(Cliente cliente)
-        {
-            _context.Clientes.Add(cliente);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task Put(Cliente cliente)
-        {
-            _context.Entry(cliente).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task Delete(Cliente cliente)
-        {
-            _context.Clientes.Remove(cliente);
-            await _context.SaveChangesAsync();
+            return await _context.Clientes.Where(n => n.Nome.Contains(nome)).ToListAsync();
         }
     }
 }
