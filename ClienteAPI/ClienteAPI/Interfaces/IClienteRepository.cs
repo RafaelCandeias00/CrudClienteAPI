@@ -1,4 +1,5 @@
 ﻿using ClienteAPI.Models;
+using ClienteAPI.Pagination;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,5 +10,6 @@ namespace ClienteAPI.Interfaces
     {
         Task<Cliente> GetByCPF(string cpf);
         Task<IEnumerable<Cliente>> GetByNome(string nome);
+        Task<PagedList<Cliente>> GetClientesPag(ClientesParameters clientesParameters);
     }
 }

@@ -3,10 +3,12 @@ using ClienteAPI.Context;
 using ClienteAPI.DTOs;
 using ClienteAPI.Interfaces;
 using ClienteAPI.Models;
+using ClienteAPI.Pagination;
 using ClienteAPI.Respositorys;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -41,6 +43,34 @@ namespace ClienteAPI.Controllers
                 }
                 return Ok(clientesDto);
             } 
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao obter clientes!");
+            }
+        }
+
+        // GET api/Clientes/clientesPag?pageNumber=1&pageSize=2
+        [HttpGet("clientesPag")]
+        public async Task<ActionResult<IEnumerable<ClienteDTO>>> GetAll([FromQuery] ClientesParameters clientesParameters)
+        {
+            try
+            {
+                var clientes = await _uof.ClienteRepository.GetClientesPag(clientesParameters);
+
+                var metadata = new
+                {
+                    clientes.TotalCount,
+                    clientes.PageSize,
+                    clientes.CurrentPage,
+                    clientes.TotalPages,
+                    clientes.HasNext,
+                    clientes.HasPrevious
+                };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+                var clientesDto = _mapper.Map<List<ClienteDTO>>(clientes);
+                return clientesDto;
+            }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao obter clientes!");

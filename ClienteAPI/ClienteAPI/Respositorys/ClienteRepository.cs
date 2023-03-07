@@ -1,6 +1,7 @@
 ﻿using ClienteAPI.Context;
 using ClienteAPI.Interfaces;
 using ClienteAPI.Models;
+using ClienteAPI.Pagination;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,15 @@ namespace ClienteAPI.Respositorys
         public async Task<IEnumerable<Cliente>> GetByNome(string nome)
         {
             return await _context.Clientes.Where(n => n.Nome.Contains(nome)).ToListAsync();
+        }
+
+        public async Task<PagedList<Cliente>> GetClientesPag(ClientesParameters clientesParameters)
+        {
+            return await PagedList<Cliente>.ToPagedList(
+                                            GetAll()
+                                            .OrderBy(c => c.Nome), 
+                                            clientesParameters.PageNumber, 
+                                            clientesParameters.PageSize);
         }
     }
 }
