@@ -149,14 +149,23 @@ namespace ClienteAPI.Controllers
         {
             try
             {
-                var cliente = _mapper.Map<Cliente>(clienteDto);
+                var CpfExiste = await _uof.ClienteRepository.GetByCPF(clienteDto.Cpf);
 
-                _uof.ClienteRepository.Add(cliente);
-                await _uof.Commit();
+                if(CpfExiste == null)
+                {
+                    var cliente = _mapper.Map<Cliente>(clienteDto);
 
-                var produtoDTO = _mapper.Map<ClienteDTO>(cliente);
+                    _uof.ClienteRepository.Add(cliente);
+                    await _uof.Commit();
 
-                return CreatedAtAction(nameof(GetById), new { id = cliente.Id }, produtoDTO);
+                    var produtoDTO = _mapper.Map<ClienteDTO>(cliente);
+
+                    return CreatedAtAction(nameof(GetById), new { id = cliente.Id }, produtoDTO);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "CPF já existe!");
+                }
             }
             catch
             {
